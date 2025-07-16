@@ -9,6 +9,7 @@ import UserCard from "./UserCard";
 const Feed = () => {
   const feed = useSelector((store) => store?.feed);
   const dispatch = useDispatch();
+
   const getFeedData = async () => {
     if (feed) return;
     try {
@@ -25,6 +26,8 @@ const Feed = () => {
   useEffect(() => {
     getFeedData();
   }, []);
+  if (!feed) return;
+  if (feed?.length === 0) return <h>No more user Found</h>;
   return (
     <div className="flex justify-center pt-2">
       {feed && <UserCard user={feed[0]} />}
