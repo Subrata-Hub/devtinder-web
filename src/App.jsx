@@ -8,6 +8,11 @@ import appStore from "./utils/appStore";
 import Feed from "./components/Feed";
 import Connections from "./components/Connections";
 import Request from "./components/Request";
+import ContactUs from "./components/ContactUs";
+import CancellationAndRefund from "./components/CancellationAndRefund";
+import PrivacyPolicy from "./components/PrivacyPolicy";
+import ShippingAndDelivery from "./components/ShippingAndDelivery";
+import TermsAndConditions from "./components/TermsAndConditions";
 
 function App() {
   return (
@@ -21,6 +26,20 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/connections" element={<Connections />} />
               <Route path="/connections/request" element={<Request />} />
+              <Route path="/contactus" element={<ContactUs />} />
+              <Route
+                path="/concellationsandrefund"
+                element={<CancellationAndRefund />}
+              />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route
+                path="/shippinganddelivery"
+                element={<ShippingAndDelivery />}
+              />
+              <Route
+                path="/termsandcondition"
+                element={<TermsAndConditions />}
+              />
             </Route>
             {/* <Route path="/profile" element={<div>Profile Page</div>} />
           <Route path="/connections" element={<div>Connection Page</div>} /> */}
