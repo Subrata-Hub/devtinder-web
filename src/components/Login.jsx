@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
+import { addFeed } from "../utils/feedSlice";
 
 const Login = () => {
   const [emailId, setEmailId] = useState("");
@@ -29,6 +30,7 @@ const Login = () => {
       console.log(res?.data);
       dispatch(addUser(res?.data));
       navigate("/");
+      dispatch(addFeed(null));
     } catch (error) {
       setErrorMessage(error?.response?.data || "Something went wrong");
     }
@@ -51,7 +53,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center my-10">
+    <div className="flex justify-center items-center mt-36">
       <div className="card bg-base-300 w-96 shadow-sm">
         <div className="card-body">
           <h2 className="card-title justify-center items-center">

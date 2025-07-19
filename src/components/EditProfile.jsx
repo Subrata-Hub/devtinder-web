@@ -4,6 +4,7 @@ import UserCard from "./UserCard";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { addUser } from "../utils/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const EditProfile = ({ user }) => {
   const [firstName, setFirstName] = useState(user?.firstName);
@@ -14,6 +15,7 @@ const EditProfile = ({ user }) => {
   const [about, setAbout] = useState(user?.about || "");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [showToast, setShowToast] = useState(false);
 
   const saveProfile = async () => {
@@ -28,16 +30,18 @@ const EditProfile = ({ user }) => {
 
       dispatch(addUser(res?.data?.data));
       setShowToast(true);
+
       setTimeout(() => {
         setShowToast(false);
-      }, 2000);
+        navigate("/");
+      }, 1000);
     } catch (error) {
       setError(error.response.data);
     }
   };
 
   return (
-    <div className="flex justify-center gap-4 my-10">
+    <div className="flex justify-center gap-4 mt-28">
       <div className="flex justify-center ">
         <div className="card bg-base-300 w-96 shadow-sm">
           <div className="card-body">

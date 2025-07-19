@@ -1,11 +1,14 @@
-import React from "react";
-import { useDispatch } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../utils/constants";
-import { removeUserFromFeed } from "../utils/feedSlice";
+import { addFeed, removeUserFromFeed } from "../utils/feedSlice";
 import axios from "axios";
 
-const UserCard = ({ user }) => {
-  console.log(user);
+const UserCard = ({ user, setLoading }) => {
+  const [page, setPage] = useState(1);
+  const feed = useSelector((store) => store?.feed?.users);
+  const availableUsers = useSelector((store) => store?.feed?.availableUsers);
+
   const { _id, firstName, lastName, photoUrl, age, gender, about } = user;
   const dispatch = useDispatch();
 
@@ -16,7 +19,20 @@ const UserCard = ({ user }) => {
         {},
         { withCredentials: true }
       );
-      dispatch(removeUserFromFeed(_id));
+
+      dispatch(removeUserFromFeed({ availableUsers, _id }));
+
+      if (feed.length === 1) {
+        setLoading(true);
+        const res = await axios.get(BASE_URL + `/feed?page=${page}&limit=10`, {
+          withCredentials: true,
+        });
+
+        console.log(`nextpageData: ${res}`);
+        dispatch(addFeed(res?.data));
+        setPage(page + 1);
+        setLoading(false);
+      }
     } catch (error) {
       console.log(error);
     }

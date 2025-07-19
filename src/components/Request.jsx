@@ -40,11 +40,17 @@ const Request = () => {
   if (!connectionRequest) return;
 
   if (connectionRequest.length === 0)
-    return <h1 className="text-bold text-2xl">No connection request Found</h1>;
+    return (
+      <h1 className="flex justify-center text-bold text-2xl pt-20">
+        No connection request Found
+      </h1>
+    );
 
   return (
-    <div className="mx-96 mt-10">
-      <h1 className="text-bold text-2xl">Connection Request</h1>
+    <div className="mx-96 mt-20">
+      <h1 className=" flex justify-center text-bold text-2xl">
+        Connection Request
+      </h1>
 
       {connectionRequest.map((request, index) => (
         <div key={index} className="flex justify-between bg-base-300 mt-6 p-4">

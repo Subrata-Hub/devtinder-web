@@ -27,11 +27,15 @@ const Connections = () => {
   if (!connections) return;
 
   if (connections.length === 0)
-    return <h1 className="text-bold text-2xl">No Connectios Found</h1>;
+    return (
+      <h1 className="flex justify-center mt-20 text-bold text-2xl">
+        No Connectios Found
+      </h1>
+    );
 
   return (
-    <div className="mx-96 mt-10">
-      <h1 className="text-bold text-2xl">Connectios</h1>
+    <div className="mx-96 mt-20">
+      <h1 className="flex justify-center text-bold text-2xl">Connectios</h1>
 
       {connections.map((connection, index) => (
         <div key={index} className="flex gap-6  bg-base-300 mt-6 p-4">

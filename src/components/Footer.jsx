@@ -55,7 +55,7 @@ const Footer = () => {
     //   </nav>
     // </footer>
 
-    <footer className="footer sm:footer-horizontal bg-neutral text-neutral-content py-4 px-4 flex justify-around fixed bottom-0">
+    <footer className="footer sm:footer-horizontal bg-neutral text-neutral-content py-15 px-4 flex justify-around mt-[550px]">
       <nav>
         <h6 className="footer-title">Services</h6>
         <a className="link link-hover">Branding</a>

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
+import { addFeed } from "../utils/feedSlice";
 
 const Navbar = () => {
   const user = useSelector((store) => store.user);
@@ -19,12 +20,17 @@ const Navbar = () => {
       console.error(error);
     }
   };
+
+  const goToFeedPage = () => {
+    dispatch(addFeed(null));
+    navigate("/");
+  };
   return (
-    <div className="navbar bg-base-300 shadow-sm">
+    <div className="navbar bg-base-300 shadow-sm fixed top-0 z-[20000000]">
       <div className="flex-1 mx-10">
-        <Link to="/" className="btn btn-ghost text-xl">
-          Devtinder
-        </Link>
+        <h2 className="btn btn-ghost text-xl" onClick={goToFeedPage}>
+          tinderVibe
+        </h2>
       </div>
       {user && (
         <>
@@ -47,7 +53,6 @@ const Navbar = () => {
                 <li>
                   <Link to={`/profile`} className="justify-between">
                     Profile
-                    <span className="badge">New</span>
                   </Link>
                 </li>
                 <li>
