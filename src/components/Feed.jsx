@@ -36,14 +36,14 @@ const Feed = () => {
 
   if (!feed) return;
 
-  if (availableUsers === 0)
+  if (availableUsers === 0 && feed.length === 0)
     return (
       <h2 className="flex justify-center text-bold text-2xl pt-20">
         No user found
       </h2>
     );
 
-  if (loading) {
+  if (feed.length === 0 && loading) {
     return <Spinner loading={loading} />;
   }
 

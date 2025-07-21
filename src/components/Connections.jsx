@@ -52,7 +52,9 @@ const Connections = () => {
             {connection?.age && connection?.gender && (
               <p>{connection?.age + " " + connection?.gender}</p>
             )}
-            <p>{connection?.about}</p>
+            <div className="line-clamp-2 max-w-[500px]">
+              {connection?.about}
+            </div>
           </div>
         </div>
       ))}

@@ -1,10 +1,292 @@
+// import React, { useState } from "react";
+// import { useDispatch } from "react-redux";
+// import UserCard from "./UserCard";
+// import axios from "axios";
+// import { BASE_URL } from "../utils/constants";
+// import { addUser } from "../utils/userSlice";
+// import { useNavigate } from "react-router-dom";
+// import { HiChevronDown } from "react-icons/hi2";
+// import { HiChevronUp } from "react-icons/hi2";
+// import AdditionalDetails from "./AdditionalDetails";
+
+// const EditProfile = ({ user }) => {
+//   const [firstName, setFirstName] = useState(user?.firstName);
+//   const [lastName, setLastName] = useState(user?.lastName);
+//   const [photoUrl, setPhotoUrl] = useState(user?.photoUrl);
+//   const [age, setAge] = useState(user?.age || "");
+//   const [gender, setGender] = useState(user?.gender || "");
+//   const [about, setAbout] = useState(user?.about || "");
+
+//   const [error, setError] = useState("");
+//   const dispatch = useDispatch();
+//   const navigate = useNavigate();
+//   const [showToast, setShowToast] = useState(false);
+//   const [showGenderOptions, setShowGenderOptios] = useState(false);
+//   const [showAdditonalPopup, setShowAdditonalPopup] = useState(false);
+
+//   const genders = ["male", "female", "others"];
+
+//   const openGederOptions = () => {
+//     setShowGenderOptios(!showGenderOptions);
+//   };
+
+//   const handleFileChange = async (e) => {
+//     const file = e.target.files[0];
+//     if (file) {
+//       const newFromData = new FormData();
+//       newFromData.append("file", file);
+//       newFromData.append("upload_preset", "tindervibeupload");
+//       // DO NOT append transformation parameters here directly like this:
+//       // newFromData.append("c_auto,g_auto,h_320,w_384"); // <-- THIS IS THE PROBLEM LINE
+
+//       try {
+//         const res = await axios.post(
+//           "https://api.cloudinary.com/v1_1/duvvksw0w/image/upload",
+//           newFromData
+//         );
+
+//         const originalUploadedUrl = res.data.secure_url;
+//         console.log("Original uploaded image URL:", originalUploadedUrl);
+
+//         // --- Apply resizing transformation to the URL ---
+//         // Example original URL: https://res.cloudinary.com/duvvksw0w/image/upload/v123456789/my_image_public_id.jpg
+//         // We want to insert transformations after '/upload/' and before 'v...' or public_id
+//         // The common structure is: .../upload/t_my_transformation_name/v... OR .../upload/w_384,h_320,c_fill,g_auto/v...
+
+//         // Find the index of "/upload/" in the URL
+//         const uploadIndex = originalUploadedUrl.indexOf("/upload/");
+//         let transformedUrl = originalUploadedUrl;
+
+//         if (uploadIndex !== -1) {
+//           const baseUrl = originalUploadedUrl.substring(
+//             0,
+//             uploadIndex + "/upload/".length
+//           );
+//           const pathAfterUpload = originalUploadedUrl.substring(
+//             uploadIndex + "/upload/".length
+//           );
+
+//           // Define your desired transformations
+//           // 'c_fill' for crop-fill, 'h_320' for height, 'w_384' for width, 'g_auto' for auto-gravity
+//           const transformations = "c_fill,h_320,w_384,g_auto";
+
+//           transformedUrl = `${baseUrl}${transformations}/${pathAfterUpload}`;
+//         } else {
+//           // Fallback if /upload/ not found (shouldn't happen with Cloudinary URLs)
+//           console.warn(
+//             "Could not find '/upload/' in the Cloudinary URL. Using original URL."
+//           );
+//         }
+
+//         setPhotoUrl(transformedUrl); // Update the photoUrl state with the transformed URL
+//         console.log("Transformed image URL:", transformedUrl);
+//       } catch (err) {
+//         console.error("Upload failed:", err);
+//         setError("Image upload failed. Please try again."); // Set an error message for the user
+//       }
+//     }
+//   };
+
+//   const saveProfile = async () => {
+//     setError("");
+
+//     try {
+//       const res = await axios.patch(
+//         BASE_URL + "/profile/edit",
+//         {
+//           firstName,
+//           lastName,
+//           photoUrl,
+//           age,
+//           gender,
+//           about,
+//         },
+//         { withCredentials: true }
+//       );
+
+//       dispatch(addUser(res?.data?.data));
+//       setShowToast(true);
+
+//       console.log(res?.data?.data);
+
+//       setTimeout(() => {
+//         setShowToast(false);
+//         navigate("/");
+//       }, 1000);
+//     } catch (error) {
+//       setError(error.response.data);
+//     }
+//   };
+
+//   return (
+//     <div className="flex justify-center gap-4 mt-8 ">
+//       <div className="flex justify-center ">
+//         <div className="card bg-base-300 w-96 shadow-sm ">
+//           <div className="card-body ">
+//             <h2 className="text-2xl font-semibold text-center">Edit Profile</h2>
+//             <div className="">
+//               <label className="from-control w-full max-w-xs">
+//                 <div className="label mb-1">
+//                   <span className="lebel-text">First Name</span>
+//                 </div>
+//                 <input
+//                   type="text"
+//                   value={firstName}
+//                   className="input input-bordered w-full max-w-xs"
+//                   onChange={(e) => setFirstName(e.target.value)}
+//                 ></input>
+//               </label>
+//               <label className="from-control w-full max-w-xs">
+//                 <div className="label mt-2 mb-1">
+//                   <span className="lebel-text">Last Name</span>
+//                 </div>
+//                 <input
+//                   type="text"
+//                   value={lastName}
+//                   className="input input-bordered w-full max-w-xs"
+//                   onChange={(e) => setLastName(e.target.value)}
+//                 ></input>
+//               </label>
+//               <label className="form-control w-full max-w-xs flex flex-col">
+//                 <div className="label mt-2 mb-1">
+//                   <span className="label-text">Upload Profile Photo:</span>
+//                 </div>
+//                 <div className="flex items-center gap-2">
+//                   <input
+//                     type="file"
+//                     name="profile-picture-upload"
+//                     accept="image/*"
+//                     className="file-input file-input-bordered file-input-sm w-full max-w-xs rounded-lg h-10"
+//                     onChange={handleFileChange}
+//                   />
+//                 </div>
+//               </label>
+//               <label className="from-control w-full max-w-xs">
+//                 <div className="label mt-2 mb-1">
+//                   <span className="lebel-text">Age:</span>
+//                 </div>
+//                 <input
+//                   type="text"
+//                   value={age}
+//                   className="input input-bordered w-full max-w-xs"
+//                   onChange={(e) => setAge(e.target.value)}
+//                 ></input>
+//               </label>
+
+//               <div className="label mt-2 mb-1">
+//                 <span className="lebel-text">Gender</span>
+//               </div>
+//               <div
+//                 className="w-[95%] h-10 border-2 border-slate-600 flex justify-between items-center px-2"
+//                 onClick={openGederOptions}
+//               >
+//                 <h2> {gender ? gender : "Select Gender"}</h2>
+//                 {!showGenderOptions ? <HiChevronDown /> : <HiChevronUp />}
+//               </div>
+
+//               {showGenderOptions && (
+//                 <div className="w-40 h-auto p-2 bg-slate-800 mt-1">
+//                   {genders.map((gender, index) => (
+//                     <div key={index} className="flex justify-between gap-4">
+//                       <label for={gender}>{gender}</label>
+//                       <input
+//                         type="radio"
+//                         name="genders"
+//                         value={gender}
+//                         onChange={(e) => setGender(e.target.value)}
+//                       ></input>
+//                     </div>
+//                   ))}
+//                 </div>
+//               )}
+
+//               <label className="from-control w-full max-w-xs">
+//                 <div className="label mt-2 mb-1">
+//                   <span className="lebel-text">About:</span>
+//                 </div>
+//                 <textarea
+//                   type="text"
+//                   value={about}
+//                   className="border-2 border-slate-700 bg-base-100 p-2 "
+//                   rows="3"
+//                   cols="45"
+//                   onChange={(e) => setAbout(e.target.value)}
+//                 ></textarea>
+//               </label>
+//               <div className="label mt-1 mb-1">
+//                 <span className="lebel-text">Additional Info</span>
+//               </div>
+//               <div
+//                 className="w-[95%] h-10 border-2 border-slate-600 flex justify-between items-center px-2"
+//                 onClick={() => setShowAdditonalPopup(true)}
+//               >
+//                 Add Aditional Information
+//               </div>
+//               {showAdditonalPopup && (
+//                 <AdditionalDetails
+//                   // location={location}
+//                   // setLocation={setLocation}
+//                   // city={city}
+//                   // setCity={setCity}
+//                   // skills={skills}
+//                   // setSkills={setSkills}
+//                   // setShowAdditonalPopup={setShowAdditonalPopup}
+//                   // phoneNumber={phoneNumber}
+//                   // setPhoneNumber={setPhoneNumber}
+//                   // alternativeEmail={alternativeEmail}
+//                   // setAlternativeEmail={setAlternativeEmail}
+//                   // brithday={brithday}
+//                   // setBrithday={setBrithday}
+//                   // hobbies={hobbies}
+//                   // setHobbies={setHobbies}
+
+//                   setShowAdditonalPopup={setShowAdditonalPopup}
+//                   user={user}
+//                 />
+//               )}
+//             </div>
+//             <div className=" w-[360px] -ml-4">
+//               <div className="text-red-400 w-full">{error}</div>
+//               <div
+//                 className="card-actions justify-center items-center w-full"
+//                 onClick={saveProfile}
+//               >
+//                 <button className="btn btn-primary w-full">Save Profile</button>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       <div className="mt-20">
+//         {/* Pass the potentially resized photoUrl to UserCard */}
+//         <UserCard
+//           user={{ firstName, lastName, photoUrl, age, gender, about }}
+//         />
+//       </div>
+//       {showToast && (
+//         <div className="toast toast-top toast-center">
+//           <div className="alert alert-success">
+//             <span>Profile saved successfully.</span>
+//           </div>
+//         </div>
+//       )}
+//     </div>
+//   );
+// };
+
+// export default EditProfile;
+
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import UserCard from "./UserCard";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
+import { HiChevronDown } from "react-icons/hi2";
+import { HiChevronUp } from "react-icons/hi2";
+import AdditionalDetails from "./AdditionalDetails";
 
 const EditProfile = ({ user }) => {
   const [firstName, setFirstName] = useState(user?.firstName);
@@ -13,26 +295,77 @@ const EditProfile = ({ user }) => {
   const [age, setAge] = useState(user?.age || "");
   const [gender, setGender] = useState(user?.gender || "");
   const [about, setAbout] = useState(user?.about || "");
+
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [showToast, setShowToast] = useState(false);
+  const [showGenderOptions, setShowGenderOptios] = useState(false);
+  const [showAdditonalPopup, setShowAdditonalPopup] = useState(false);
+
+  const genders = ["male", "female", "others"];
+
+  const { city } = useSelector((store) => store.user);
+
+  const openGederOptions = () => {
+    setShowGenderOptios(!showGenderOptions);
+  };
+
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const newFromData = new FormData();
+      newFromData.append("file", file);
+      newFromData.append("upload_preset", "tindervibeupload");
+
+      try {
+        const res = await axios.post(
+          "https://api.cloudinary.com/v1_1/duvvksw0w/image/upload",
+          newFromData
+        );
+        const originalUploadedUrl = res.data.secure_url;
+        const uploadIndex = originalUploadedUrl.indexOf("/upload/");
+        let transformedUrl = originalUploadedUrl;
+
+        if (uploadIndex !== -1) {
+          const baseUrl = originalUploadedUrl.substring(
+            0,
+            uploadIndex + "/upload/".length
+          );
+          const pathAfterUpload = originalUploadedUrl.substring(
+            uploadIndex + "/upload/".length
+          );
+          const transformations = "c_fill,h_320,w_384,g_auto";
+          transformedUrl = `${baseUrl}${transformations}/${pathAfterUpload}`;
+        }
+        setPhotoUrl(transformedUrl);
+      } catch (err) {
+        console.error("Upload failed:", err);
+        setError("Image upload failed. Please try again.");
+      }
+    }
+  };
 
   const saveProfile = async () => {
     setError("");
-
     try {
       const res = await axios.patch(
         BASE_URL + "/profile/edit",
-        { firstName, lastName, photoUrl, age, gender, about },
+        {
+          firstName,
+          lastName,
+          photoUrl,
+          age,
+          gender,
+          about,
+        },
         { withCredentials: true }
       );
-
       dispatch(addUser(res?.data?.data));
       setShowToast(true);
-
       setTimeout(() => {
         setShowToast(false);
+
         navigate("/");
       }, 1000);
     } catch (error) {
@@ -41,16 +374,23 @@ const EditProfile = ({ user }) => {
   };
 
   return (
-    <div className="flex justify-center gap-4 mt-28">
-      <div className="flex justify-center ">
-        <div className="card bg-base-300 w-96 shadow-sm">
-          <div className="card-body">
-            <h2 className="card-title justify-center items-center">
-              Edit Profile
-            </h2>
+    <div className="flex justify-center gap-4 mt-[70px]">
+      <div className="flex justify-center">
+        {/* --- MODIFICATION START --- */}
+        {/* 1. Set a max-height and make the card a vertical flex container */}
+        <div className="card bg-base-300 w-96 shadow-sm flex flex-col max-h-[90vh]">
+          {/* 2. Create a sticky header */}
+          <div className="px-4 py-2 border-b border-base-200">
+            <h2 className="text-2xl font-semibold text-center">Edit Profile</h2>
+          </div>
+
+          {/* 3. Create a scrollable content area that fills available space */}
+          <div className="card-body overflow-y-auto flex-grow">
             <div className="">
+              {" "}
+              {/* Your original form container */}
               <label className="from-control w-full max-w-xs">
-                <div className="label">
+                <div className="label mb-1">
                   <span className="lebel-text">First Name</span>
                 </div>
                 <input
@@ -61,7 +401,7 @@ const EditProfile = ({ user }) => {
                 ></input>
               </label>
               <label className="from-control w-full max-w-xs">
-                <div className="label mt-2">
+                <div className="label mt-2 mb-1">
                   <span className="lebel-text">Last Name</span>
                 </div>
                 <input
@@ -71,19 +411,22 @@ const EditProfile = ({ user }) => {
                   onChange={(e) => setLastName(e.target.value)}
                 ></input>
               </label>
-              <label className="from-control w-full max-w-xs">
-                <div className="label mt-2">
-                  <span className="lebel-text">Photo Url:</span>
+              <label className="form-control w-full max-w-xs flex flex-col">
+                <div className="label mt-2 mb-1">
+                  <span className="label-text">Upload Profile Photo:</span>
                 </div>
-                <input
-                  type="text"
-                  value={photoUrl}
-                  className="input input-bordered w-full max-w-xs"
-                  onChange={(e) => setPhotoUrl(e.target.value)}
-                ></input>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="file"
+                    name="profile-picture-upload"
+                    accept="image/*"
+                    className="file-input file-input-bordered file-input-sm w-full max-w-xs rounded-lg h-10"
+                    onChange={handleFileChange}
+                  />
+                </div>
               </label>
               <label className="from-control w-full max-w-xs">
-                <div className="label mt-2">
+                <div className="label mt-2 mb-1">
                   <span className="lebel-text">Age:</span>
                 </div>
                 <input
@@ -93,45 +436,87 @@ const EditProfile = ({ user }) => {
                   onChange={(e) => setAge(e.target.value)}
                 ></input>
               </label>
-              <label className="from-control w-full max-w-xs">
-                <div className="label mt-2">
-                  <span className="lebel-text">Gender</span>
+              <div className="label mt-2 mb-1">
+                <span className="lebel-text">Gender</span>
+              </div>
+              <div
+                className="w-full h-10 border-2 border-slate-600 flex justify-between items-center px-2 cursor-pointer"
+                onClick={openGederOptions}
+              >
+                <h2> {gender ? gender : "Select Gender"}</h2>
+                {!showGenderOptions ? <HiChevronDown /> : <HiChevronUp />}
+              </div>
+              {showGenderOptions && (
+                <div className="w-40 h-auto p-2 bg-slate-800 mt-1">
+                  {genders.map((gender, index) => (
+                    <div key={index} className="flex justify-between gap-4">
+                      <label htmlFor={gender}>{gender}</label>
+                      <input
+                        type="radio"
+                        name="genders"
+                        id={gender}
+                        value={gender}
+                        onChange={(e) => setGender(e.target.value)}
+                      ></input>
+                    </div>
+                  ))}
                 </div>
-                <input
-                  type="text"
-                  value={gender}
-                  className="input input-bordered w-full max-w-xs"
-                  onChange={(e) => setGender(e.target.value)}
-                ></input>
-              </label>
+              )}
               <label className="from-control w-full max-w-xs">
-                <div className="label mt-2">
+                <div className="label mt-2 mb-1">
                   <span className="lebel-text">About:</span>
                 </div>
-                <input
+                <textarea
                   type="text"
                   value={about}
-                  className="input input-bordered w-full max-w-xs"
+                  className="border-2 border-slate-700 bg-base-100 p-2 "
+                  rows="3"
+                  cols="45"
                   onChange={(e) => setAbout(e.target.value)}
-                ></input>
+                ></textarea>
               </label>
+              <div className="label mt-1 mb-1">
+                <span className="lebel-text">Additional Info</span>
+              </div>
+              <div
+                className="w-full h-10 border-2 border-slate-600 flex justify-between items-center px-2 cursor-pointer"
+                onClick={() => setShowAdditonalPopup(true)}
+              >
+                Add Aditional Information
+              </div>
+              {showAdditonalPopup && (
+                <AdditionalDetails
+                  setShowAdditonalPopup={setShowAdditonalPopup}
+                  user={user}
+                />
+              )}
             </div>
-            <div className="text-red-400">{error}</div>
-            <div className="card-actions justify-center items-center">
-              <button className="btn btn-primary" onClick={saveProfile}>
+          </div>
+
+          {/* 4. Create a sticky footer */}
+          <div className="p-4 border-t border-base-200">
+            {error && (
+              <div className="text-red-400 w-full text-center pb-2">
+                {error}
+              </div>
+            )}
+            <div className="card-actions justify-center items-center w-full">
+              <button className="btn btn-primary w-full" onClick={saveProfile}>
                 Save Profile
               </button>
             </div>
           </div>
+          {/* --- MODIFICATION END --- */}
         </div>
       </div>
-      <div>
+
+      <div className="mt-20">
         <UserCard
-          user={{ firstName, lastName, photoUrl, age, gender, about }}
+          user={{ firstName, lastName, photoUrl, age, gender, about, city }}
         />
       </div>
       {showToast && (
-        <div className="toast toast-top toast-center">
+        <div className="toast toast-top toast-center mt-15">
           <div className="alert alert-success">
             <span>Profile saved successfully.</span>
           </div>

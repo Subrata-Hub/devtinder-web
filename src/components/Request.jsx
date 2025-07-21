@@ -72,11 +72,13 @@ const Request = () => {
                   {request?.fromUserId?.age + " " + request?.fromUserId?.gender}
                 </p>
               )}
-              <p>{request?.fromUserId?.about}</p>
+              <div className="line-clamp-2 max-w-[420px]">
+                {request?.fromUserId?.about}
+              </div>
             </div>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-2 mt-2">
             <button
               className="btn btn-primary"
               onClick={() => reviewRequest("rejected", request?._id)}
