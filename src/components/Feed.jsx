@@ -39,7 +39,7 @@ const Feed = () => {
   if (availableUsers === 0 && feed.length === 0)
     return (
       <h2 className="flex justify-center text-bold text-2xl pt-20">
-        No user found
+        No user Match in this movement
       </h2>
     );
 

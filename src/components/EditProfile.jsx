@@ -88,7 +88,7 @@ const EditProfile = ({ user }) => {
         setShowToast(false);
 
         navigate("/");
-      }, 1000);
+      }, 2000);
     } catch (error) {
       setError(error.response.data);
     }
@@ -231,7 +231,7 @@ const EditProfile = ({ user }) => {
         </div>
       </div>
 
-      <div className="mt-20">
+      <div className="mt-[60px]">
         <UserCard
           user={{ firstName, lastName, photoUrl, age, gender, about, city }}
         />

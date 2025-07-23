@@ -24,7 +24,7 @@ const AdditionalDetails = ({ setShowAdditonalPopup, user }) => {
   const [addHobbies, setAddHobbies] = useState("");
 
   const handleAddSkillChange = (e) => {
-    setAddSkill(e.target.value);
+    setAddSkill(e.target.value.toLocaleLowerCase());
   };
 
   const handleAddSkillSubmit = (e) => {
@@ -35,7 +35,7 @@ const AdditionalDetails = ({ setShowAdditonalPopup, user }) => {
   };
 
   const handleAddHobbiesChange = (e) => {
-    setAddHobbies(e.target.value);
+    setAddHobbies(e.target.value.toLocaleLowerCase());
   };
 
   const handleAddHobbiesSubmit = (e) => {
@@ -113,7 +113,9 @@ const AdditionalDetails = ({ setShowAdditonalPopup, user }) => {
                 type="text"
                 value={location}
                 className="input input-bordered w-full"
-                onChange={(e) => setLocation(e.target.value)}
+                onChange={(e) =>
+                  setLocation(e.target.value.toLocaleLowerCase())
+                }
               ></input>
             </label>
 

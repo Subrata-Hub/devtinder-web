@@ -40,11 +40,11 @@ const UserCard = ({ user, setLoading }) => {
   };
   return (
     <div className="card bg-base-300 w-96 shadow-sm">
-      <figure className="h-80 w-[380px">
+      <figure className="h-80 w-[384px]">
         <img
           src={photoUrl}
           alt="Photo"
-          className="h-80 w-[380px] object-contain"
+          className="h-80 w-[370px] object-cover object-top"
         />
       </figure>
       <div className="card-body">

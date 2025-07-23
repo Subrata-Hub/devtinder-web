@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
-    <footer className="footer sm:footer-horizontal bg-neutral text-neutral-content py-15 px-4 flex justify-around absolute -bottom-[350px]">
+    <footer className="footer sm:footer-horizontal bg-neutral text-neutral-content py-15 px-4 flex justify-around">
       <nav>
         <h6 className="footer-title">Services</h6>
         <a className="link link-hover">Branding</a>
