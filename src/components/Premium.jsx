@@ -64,7 +64,7 @@ const Premium = () => {
     <PayPalScriptProvider
       options={{
         "client-id":
-          "Acbyi7Gt55eWZnbztJlqBpgpyh-4LzO50B8Y5E3l6DJdqZMeel9m7CvIVD_Idl2rV92qkxRyHlY1qaWt",
+          "AfU5B86AcfjapQo1wyfXSnzZwdm3ahsprdmHhvLLoJk4oXZiEGpYYYw71PIDkJvdDmLcCKoc-6J9vT9G",
       }}
     >
       <div className="m-20">
