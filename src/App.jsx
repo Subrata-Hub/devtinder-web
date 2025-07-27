@@ -13,6 +13,8 @@ import CancellationAndRefund from "./components/CancellationAndRefund";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import ShippingAndDelivery from "./components/ShippingAndDelivery";
 import TermsAndConditions from "./components/TermsAndConditions";
+import Premium from "./components/Premium";
+// import OrderConformation from "./components/OrderConformation";
 
 function App() {
   return (
@@ -26,6 +28,13 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/connections" element={<Connections />} />
               <Route path="/connections/request" element={<Request />} />
+              <Route path="/premium" element={<Premium />} />
+              {/* <Route
+                path="/payment/complete-order"
+                element={<OrderConformation />}
+              /> */}
+              <Route path="/payment/cancel-order" element={<Premium />} />
+
               <Route path="/contactus" element={<ContactUs />} />
               <Route
                 path="/concellationsandrefund"
