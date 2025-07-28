@@ -5,9 +5,11 @@ import { BASE_URL } from "../utils/constants";
 import { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const Premium = () => {
   const [orderId, setOrderId] = useState("");
+  const userData = useSelector((store) => store.user);
 
   const navigate = useNavigate();
   // const handleCreatePayment = async (type) => {
@@ -29,11 +31,12 @@ const Premium = () => {
   // };
 
   const verifyPremiupUser = async () => {
+    if (userData.isPremium) return;
     const res = await axios.get(BASE_URL + "/primium/verify", {
       withCredentials: true,
     });
 
-    if (res.data.isPremium) {
+    if (res?.data?.isPremium) {
       // window.location.replace(`${res?.data}`);
       navigate("/payment/complete-order");
     }
