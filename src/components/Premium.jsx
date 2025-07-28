@@ -1,13 +1,15 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { useNavigate } from "react-router-dom";
-// import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Premium = () => {
   const [orderId, setOrderId] = useState("");
-  // const navigate = useNavigate();
+
+  const navigate = useNavigate();
   // const handleCreatePayment = async (type) => {
   //   const res = await axios.post(
   //     BASE_URL + "/payment/create",
@@ -26,6 +28,17 @@ const Premium = () => {
   //   console.log(res?.data);
   // };
 
+  const verifyPremiupUser = async () => {
+    const res = await axios.get(BASE_URL + "/primium/verify", {
+      withCredentials: true,
+    });
+
+    if (res.data.isPremium) {
+      // window.location.replace(`${res?.data}`);
+      navigate("/payment/complete-order");
+    }
+  };
+
   const onCreateOrder = async (type) => {
     try {
       const res = await axios.post(
@@ -35,8 +48,6 @@ const Premium = () => {
           withCredentials: true,
         }
       );
-
-      console.log(res.data.savedPayment);
 
       const order = await res.data.savedPayment;
       setOrderId(order.orderId);
@@ -48,18 +59,23 @@ const Premium = () => {
 
   const onApproveOrder = async (orderId) => {
     try {
-      const res = await axios.post(
+      await axios.post(
         BASE_URL + "/payment/capture",
         { orderId: orderId },
         { withCredentials: true }
       );
 
-      const details = res.data;
-      alert(`Transaction completed by ${details.payer.name.given_name}`);
+      // const details = res.data;
+
+      // alert(`Transaction completed by ${details.payer.name.given_name}`);
     } catch (error) {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    verifyPremiupUser();
+  }, []);
   return (
     <PayPalScriptProvider
       options={{
