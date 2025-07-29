@@ -1,44 +1,26 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
-import { useEffect, useState } from "react";
-// import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Premium = () => {
   const [orderId, setOrderId] = useState("");
   const userData = useSelector((store) => store.user);
 
   const navigate = useNavigate();
-  // const handleCreatePayment = async (type) => {
-  //   const res = await axios.post(
-  //     BASE_URL + "/payment/create",
-  //     { membershipType: type },
-  //     {
-  //       withCredentials: true,
-  //     }
-  //   );
-
-  //   // navigate(`${res?.data}`);
-
-  //   window.location.replace(`${res?.data}`);
-
-  //   // redirect(`${res?.data}`);
-
-  //   console.log(res?.data);
-  // };
+  const dispatch = useDispatch();
 
   const verifyPremiupUser = async () => {
-    if (userData.isPremium) return;
     const res = await axios.get(BASE_URL + "/primium/verify", {
       withCredentials: true,
     });
 
     if (res?.data?.isPremium) {
-      // window.location.replace(`${res?.data}`);
-      navigate("/payment/complete-order");
+      dispatch(addUser(res?.data));
+      navigate(`/payment/complete-order/${orderId}`);
     }
   };
 
@@ -68,17 +50,12 @@ const Premium = () => {
         { withCredentials: true }
       );
 
-      // const details = res.data;
-
-      // alert(`Transaction completed by ${details.payer.name.given_name}`);
+      verifyPremiupUser();
     } catch (error) {
       console.log(error);
     }
   };
 
-  useEffect(() => {
-    verifyPremiupUser();
-  }, []);
   return (
     <PayPalScriptProvider
       options={{
@@ -97,23 +74,21 @@ const Premium = () => {
               <li> - 3 months</li>
             </ul>
 
-            {/* <button
-              
-              className="btn btn-secondary"
-              onClick={() => handleCreatePayment("Silver")}
-            >
-              Buy Silver
-            </button> */}
-
-            <div className="w-80">
+            <div className="w-80 ">
               <p className="text-2xl font-semibold text-blue-700 mb-4 text-center">
                 INR 1500
               </p>
-              <PayPalButtons
-                style={{ layout: "vertical", color: "blue" }}
-                createOrder={() => onCreateOrder("Silver")}
-                onApprove={() => onApproveOrder(orderId)}
-              />
+              {userData?.membershipType === "Silver" ? (
+                <p className="text-center text-green-600 font-bold">
+                  You already have Silver Membership!
+                </p>
+              ) : (
+                <PayPalButtons
+                  style={{ layout: "vertical", color: "blue" }}
+                  createOrder={() => onCreateOrder("Silver")}
+                  onApprove={() => onApproveOrder(orderId)}
+                />
+              )}
             </div>
           </div>
           <div className="divider divider-horizontal">OR</div>
@@ -121,27 +96,26 @@ const Premium = () => {
             <h1 className="font-bold text-3xl">Gold Membership</h1>
             <ul>
               <li> - Chat with other people</li>
-              <li> - Inifiniye connection Requests per day</li>
+              <li> - Infinite connection Requests per day</li>
               <li> - Blue Tick</li>
               <li> - 6 months</li>
             </ul>
-            {/* <button
-              // onClick={() => handleBuyClick("gold")}
-              onClick={() => handleCreatePayment("Gold")}
-              className="btn btn-primary"
-            >
-              Buy Gold
-            </button> */}
 
             <div className="w-80">
               <p className="text-2xl text-center font-semibold text-blue-700 mb-4">
                 INR 2000
               </p>
-              <PayPalButtons
-                style={{ layout: "vertical", color: "blue" }}
-                createOrder={() => onCreateOrder("Gold")}
-                onApprove={() => onApproveOrder(orderId)}
-              />
+              {userData?.membershipType === "Gold" ? (
+                <p className="text-center text-green-600 font-bold">
+                  You already have Gold Membership!
+                </p>
+              ) : (
+                <PayPalButtons
+                  style={{ layout: "vertical", color: "blue" }}
+                  createOrder={() => onCreateOrder("Gold")}
+                  onApprove={() => onApproveOrder(orderId)}
+                />
+              )}
             </div>
           </div>
         </div>

@@ -14,6 +14,7 @@ import PrivacyPolicy from "./components/PrivacyPolicy";
 import ShippingAndDelivery from "./components/ShippingAndDelivery";
 import TermsAndConditions from "./components/TermsAndConditions";
 import Premium from "./components/Premium";
+import OrderConformation from "./components/OrderConformation";
 // import OrderConformation from "./components/OrderConformation";
 
 function App() {
@@ -29,10 +30,10 @@ function App() {
               <Route path="/connections" element={<Connections />} />
               <Route path="/connections/request" element={<Request />} />
               <Route path="/premium" element={<Premium />} />
-              {/* <Route
-                path="/payment/complete-order"
+              <Route
+                path="/payment/complete-order/:orderId"
                 element={<OrderConformation />}
-              /> */}
+              />
               <Route path="/payment/cancel-order" element={<Premium />} />
 
               <Route path="/contactus" element={<ContactUs />} />
