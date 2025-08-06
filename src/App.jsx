@@ -15,6 +15,7 @@ import ShippingAndDelivery from "./components/ShippingAndDelivery";
 import TermsAndConditions from "./components/TermsAndConditions";
 import Premium from "./components/Premium";
 import OrderConformation from "./components/OrderConformation";
+import Chat from "./components/Chat";
 // import OrderConformation from "./components/OrderConformation";
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
                 element={<OrderConformation />}
               />
               <Route path="/payment/cancel-order" element={<Premium />} />
+              <Route path="/chat/:targetUserId" element={<Chat />} />
 
               <Route path="/contactus" element={<ContactUs />} />
               <Route
